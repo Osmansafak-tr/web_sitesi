@@ -1,0 +1,94 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+
+<div class="m-5">
+    Dönem : <input type="text" id="donem">
+    Kullanıcı : <input type="text" id="kullanici">
+    Ders : <input type="text" id="ders">
+    <button class="btn btn-primary" onclick="tableSearch()">Ara</button>
+</div>
+
+<table id="mytable" class="tbl">
+    <thead>
+        <tr>
+            <th style="width: 4%;">Başlık</th>
+            <th style="width: 3%;">Öğrenciler</th>
+            <th style="width: 10%;">Öğrencilerin numaraları</th>
+            <th style="width: 10%;">Öğrencilerin Öğretim türleri</th>
+            <th style="width: 10%;">Danışman</th>
+            <th style="width: 12%;">Jüri1</th>
+            <th style="width: 13%;">Jüri2</th>
+            <th style="width: 5%;">Ders Adı</th>
+            <th style="width: 10%;">Anahtar Kelimeler</th>
+            <th style="width: 10%;">Özet</th>
+            <th style="width: 5%;">Dönem</th>
+            <th style="width: 3%;">Kullanıcı</th>
+            <th style="width: 5%;">Tez</th>
+        </tr>
+    </thead>
+    {% for pdf in tezler %}
+    <tbody>
+        <tr>
+            <td style="width: 4%;">{{pdf.baslik}}</td>
+            <td style="width: 3%;">
+            {% if pdf.ogrenci1 != '' %}{{pdf.ogrenci1}}{% endif %}{% if pdf.ogrenci2 != '' %},{{pdf.ogrenci2}}{% endif %}{% if pdf.ogrenci3 != '' %},{{pdf.ogrenci3}}{% endif %}
+            </td>
+            <td style="width: 10%;">
+            {% if pdf.ogrenci1_no != '0' %}{{pdf.ogrenci1_no}}{% endif %}
+            {% if pdf.ogrenci2_no != '0' %},{{pdf.ogrenci2_no}}{% endif %}
+            {% if pdf.ogrenci3_no != '0' %},{{pdf.ogrenci3_no}}{% endif %}
+            </td>
+            <td style="width: 10%;">
+            {% if pdf.ogrenci1_ogretim != '' %}{{pdf.ogrenci1_ogretim}}{% endif %}{% if pdf.ogrenci2_ogretim != '' %},{{pdf.ogrenci2_ogretim}}{% endif %}{% if pdf.ogrenci3_ogretim != '' %},{{pdf.ogrenci3_ogretim}}{% endif %}
+            </td>
+            <td style="width: 10%;">{{pdf.danisman}}</td>
+            <td style="width: 12%;">{{pdf.juri1}}</td>
+            <td style="width: 13%;">{{pdf.juri2}}</td>
+            <td style="width: 5%;">{{pdf.ders_adi}}</td>
+            <td style="width: 10%;">{{pdf.anahtar}}</td>
+            <td style="width: 10%;"><div class="scrollable">{{pdf.ozet}}</div></td>
+            <td style="width: 5%;">{{pdf.donem}}</td>
+            <td style="width: 3%;">{{pdf.kullanici}}</td>
+            <td style="width: 5%;"><a href="{{pdf.tez}}">{{pdf.tez.name}}</a></td>
+        </tr>
+    </tbody>
+    {% endfor %}
+</table>
+
+<script>
+
+function tableSearch(){
+    let tr,td_donem,td_ders,td_kullanici,table,value_donem,value_kullanici,value_ders;
+    let degerler = [];
+
+    let input_donem = document.getElementById("donem");
+    let filter_donem = input_donem.value.toLowerCase();
+    let input_kullanici = document.getElementById("kullanici");
+    let filter_kullanici = input_kullanici.value.toLowerCase();
+    let input_ders = document.getElementById("ders");
+    let filter_ders = input_ders.value.toLowerCase();
+    table = document.getElementById("mytable");
+    tr = document.getElementsByTagName("tr");
+        
+    for(let i=0;i<tr.length;i++){
+        td_donem = tr[i].getElementsByTagName("td")[10];
+        td_kullanici = tr[i].getElementsByTagName("td")[11];
+        td_ders = tr[i].getElementsByTagName("td")[7];
+        if(td_donem && td_kullanici && td_ders){
+            value_donem = td_donem.innerText;
+            value_kullanici = td_kullanici.innerText;
+            value_ders = td_ders.innerText;
+            if(value_donem.toLowerCase().trim() == filter_donem && value_kullanici.toLowerCase().trim() == filter_kullanici && value_ders.toLowerCase().trim() == filter_ders){
+                tr[i].style.display = "";
+            }
+            else{
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+
+</script>
+
+{% endblock content %}

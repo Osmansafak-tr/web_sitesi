@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    
+<div class="m-5">
+    <form action="/metin_isleme/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>Pdf ten bilgiler çekilsin mi?</p>
+        <input type="text" value="{{data_file_url}}" name="file_url">
+        <button type="submit" class="btn btn-primary">Onayla</button>
+    </form>
+</div>
+
+{% endblock content %}

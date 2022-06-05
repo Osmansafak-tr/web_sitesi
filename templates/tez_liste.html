@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<a href="{% url 'tez_ekle' %}"><button class="btn btn-secondary">Ekle</button></a>
+
+<table>
+    <thead>
+        <tr>
+            <th style="width: 4%;">Başlık</th>
+            <th style="width: 3%;">Öğrenciler</th>
+            <th style="width: 10%;">Öğrencilerin numaraları</th>
+            <th style="width: 10%;">Öğrencilerin Öğretim türleri</th>
+            <th style="width: 10%;">Danışman</th>
+            <th style="width: 12%;">Jüri1</th>
+            <th style="width: 13%;">Jüri2</th>
+            <th style="width: 5%;">Ders Adı</th>
+            <th style="width: 10%;">Anahtar Kelimeler</th>
+            <th style="width: 10%;">Özet</th>
+            <th style="width: 5%;">Dönem</th>
+            <th style="width: 3%;">Kullanıcı</th>
+            <th style="width: 5%;">Tez</th>
+        </tr>
+    </thead>
+    {% for pdf in tezler %}
+    <tbody>
+        <tr>
+            {% if user.username == pdf.kullanici %}
+            <td style="width: 4%;">{{pdf.baslik}}</td>
+            <td style="width: 3%;">
+            {% if pdf.ogrenci1 != '' %}{{pdf.ogrenci1}}{% endif %}{% if pdf.ogrenci2 != '' %},{{pdf.ogrenci2}}{% endif %}{% if pdf.ogrenci3 != '' %},{{pdf.ogrenci3}}{% endif %}
+            </td>
+            <td style="width: 10%;">
+            {% if pdf.ogrenci1_no != '0' %}{{pdf.ogrenci1_no}}{% endif %}
+            {% if pdf.ogrenci2_no != '0' %},{{pdf.ogrenci2_no}}{% endif %}
+            {% if pdf.ogrenci3_no != '0' %},{{pdf.ogrenci3_no}}{% endif %}
+            </td>
+            <td style="width: 10%;">
+            {% if pdf.ogrenci1_ogretim != '' %}{{pdf.ogrenci1_ogretim}}{% endif %}{% if pdf.ogrenci2_ogretim != '' %},{{pdf.ogrenci2_ogretim}}{% endif %}{% if pdf.ogrenci3_ogretim != '' %},{{pdf.ogrenci3_ogretim}}{% endif %}
+            </td>
+            <td style="width: 10%;">{{pdf.danisman}}</td>
+            <td style="width: 12%;">{{pdf.juri1}}</td>
+            <td style="width: 13%;">{{pdf.juri2}}</td>
+            <td style="width: 5%;">{{pdf.ders_adi}}</td>
+            <td style="width: 10%;">{{pdf.anahtar}}</td>
+            <td style="width: 10%;"><div class="scrollable">{{pdf.ozet}}</div></td>
+            <td style="width: 5%;">{{pdf.donem}}</td>
+            <td style="width: 3%;">{{pdf.kullanici}}</td>
+            <td style="width: 5%;"><a href="{{pdf.tez}}">{{pdf.tez.name}}</a></td>
+            {% endif %}
+        </tr>
+    </tbody>
+    {% endfor %}
+</table>
+
+    
+{% endblock content %}

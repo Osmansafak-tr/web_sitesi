@@ -1,0 +1,132 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+
+<div class="m-5">
+    <label for="search_types">
+        <select name="search_types" id="search_types_id" onchange="satirDegistir(this.selectedIndex);" onfocus="this.selectedIndex = -1;">
+            <option value="0">Proje adı</option>
+            <option value="1">Yazar</option>
+            <option value="" style="display: none;"></option>
+            <option value="" style="display: none;"></option>
+            <option value="" style="display: none;"></option>
+            <option value="" style="display: none;"></option>
+            <option value="" style="display: none;"></option>
+            <option value="7">Ders</option>
+            <option value="8">Anahtar Kelimeler</option>
+            <option value="" style="display: none;"></option>
+            <option value="10">Dönem</option>
+        </select>
+    </label>
+    Ara : <input type="text" id='myinput'>
+    <button class="btn btn-primary" onclick="tableSearch()">Ara</button>
+</div>
+
+<table id="mytable" class="tbl">
+    <thead>
+        <tr>
+            <th style="width: 4%;">Başlık</th>
+            <th style="width: 3%;">Öğrenciler</th>
+            <th style="width: 10%;">Öğrencilerin numaraları</th>
+            <th style="width: 10%;">Öğrencilerin Öğretim türleri</th>
+            <th style="width: 10%;">Danışman</th>
+            <th style="width: 12%;">Jüri1</th>
+            <th style="width: 13%;">Jüri2</th>
+            <th style="width: 5%;">Ders Adı</th>
+            <th style="width: 10%;">Anahtar Kelimeler</th>
+            <th style="width: 10%;">Özet</th>
+            <th style="width: 5%;">Dönem</th>
+            <th style="width: 3%;">Kullanıcı</th>
+            <th style="width: 5%;">Tez</th>
+        </tr>
+    </thead>
+    {% for pdf in tezler %}
+    <tbody>
+        <tr>
+            <td style="width: 4%;">{{pdf.baslik}}</td>
+            <td style="width: 3%;">
+            {% if pdf.ogrenci1 != '' %}{{pdf.ogrenci1}}{% endif %}{% if pdf.ogrenci2 != '' %},{{pdf.ogrenci2}}{% endif %}{% if pdf.ogrenci3 != '' %},{{pdf.ogrenci3}}{% endif %}
+            </td>
+            <td style="width: 10%;">
+            {% if pdf.ogrenci1_no != '0' %}{{pdf.ogrenci1_no}}{% endif %}
+            {% if pdf.ogrenci2_no != '0' %},{{pdf.ogrenci2_no}}{% endif %}
+            {% if pdf.ogrenci3_no != '0' %},{{pdf.ogrenci3_no}}{% endif %}
+            </td>
+            <td style="width: 10%;">
+            {% if pdf.ogrenci1_ogretim != '' %}{{pdf.ogrenci1_ogretim}}{% endif %}{% if pdf.ogrenci2_ogretim != '' %},{{pdf.ogrenci2_ogretim}}{% endif %}{% if pdf.ogrenci3_ogretim != '' %},{{pdf.ogrenci3_ogretim}}{% endif %}
+            </td>
+            <td style="width: 10%;">{{pdf.danisman}}</td>
+            <td style="width: 12%;">{{pdf.juri1}}</td>
+            <td style="width: 13%;">{{pdf.juri2}}</td>
+            <td style="width: 5%;">{{pdf.ders_adi}}</td>
+            <td style="width: 10%;">{{pdf.anahtar}}</td>
+            <td style="width: 10%;"><div class="scrollable">{{pdf.ozet}}</div></td>
+            <td style="width: 5%;">{{pdf.donem}}</td>
+            <td style="width: 3%;">{{pdf.kullanici}}</td>
+            <td style="width: 5%;"><a href="{{pdf.tez}}">{{pdf.tez.name}}</a></td>
+        </tr>
+    </tbody>
+    {% endfor %}
+</table>
+
+<script>
+    var satir=-1;
+
+    function satirDegistir(a){
+        satir=a;
+        console.log(satir);
+    }
+
+    function tableSearch(){
+        let input,tr,td,filter,table,txtValue;
+        console.log(satir);
+
+        input = document.getElementById("myinput");
+        filter = input.value.toLowerCase();
+        table = document.getElementById("mytable");
+        tr = document.getElementsByTagName("tr");
+        console.log(filter);
+        if(satir==0 || satir==7 || satir==10){
+            for(let i=0;i<tr.length;i++){
+                td = tr[i].getElementsByTagName("td")[satir];
+                if(td){
+                    txtValue = td.innerText;
+                    console.log(txtValue.toLowerCase())
+                    if(txtValue.toLowerCase().trim() == filter){
+                        tr[i].style.display = "";
+                    }
+                    else{
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+        else{
+            for(let i=0;i<tr.length;i++){
+                td = tr[i].getElementsByTagName("td")[satir];
+                if(td){
+                    string = td.innerText
+                    dizi = string.split(',')
+                    console.log(dizi[0]);
+                    console.log(dizi[1]);
+                    console.log(dizi[2]);
+                    for(index in dizi){
+                        txtValue = dizi[index];
+                        console.log(txtValue.toLowerCase())
+                        if(txtValue.toLowerCase().trim() == filter){
+                            tr[i].style.display = "";
+                            break;
+                        }
+                        else{
+                            tr[i].style.display = "none";
+                        }   
+                    }
+                }
+            }
+        }
+    }
+
+</script>
+
+    
+{% endblock content %}
